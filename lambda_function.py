@@ -4,15 +4,15 @@ from urllib import urlencode
 import urllib2 as urlrequest
 import json
 import random
+import datetime
 
-#下記XXX箇所は取得した値にそれぞれ変更してください。
 # CUSTOM SEARCH API周りの設定
 CUSTOM_SEARCH_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 CUSTOM_ENGINE_ID = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 URL_TEMPLATE = "https://www.googleapis.com/customsearch/v1?key={key}&cx={cx}&searchType=image&q={search_word}"
 
 # SLACK周りの設定
-SLACK_POST_URL = "https://hooks.slack.com/services/T4YNVF84V/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+SLACK_POST_URL = "https://hooks.slack.com/services/T4YNVF84V/B98S3UKQU/XXXXXXXXXXXXXXXXXXXXXXXX"
 
 def post_image_to_slack(search_word):
     """
@@ -29,7 +29,14 @@ def post_image_to_slack(search_word):
     url = random.choice(urls)
 
     # slack用のメッセージを作成
-    post_msg = build_message(url)
+    # 取得した時間によって出すメッセージを変更する
+    hour = datetime.datetime.now().hour
+    txt = ""
+    if hour == 1:
+        txt = "おはよう！今日も頑張ろう！！\n"
+    elif hour == 10:
+        txt = "今日もお疲れ様！19時だよ！！\n"
+    post_msg = build_message(url, txt)
 
     # slackに投稿
     return post(post_msg)
@@ -62,13 +69,12 @@ def post(payload):
     response = urlrequest.build_opener(urlrequest.HTTPHandler()).open(req, data.encode('utf-8')).read()
     return response.decode('utf-8')
 
-def build_message(url, **kwargs):
+def build_message(url, *args):
     """
     Slack用のメッセージを作成
     """
     post_message = {}
-    post_message["text"] = "おはよう！今日も頑張ろう！！\n" + url
-    post_message.update(kwargs)
+    post_message["text"] = args[0] + url
     return post_message
 
 
@@ -83,6 +89,7 @@ def lambda_handler(event, context):
     members.append("齋藤飛鳥")
     members.append("秋元真夏")
     members.append("堀未央奈")
+    members.append("生駒里奈")
     members.append("乃木坂46")
     search_word = random.choice(members)
     
