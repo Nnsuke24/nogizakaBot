@@ -7,12 +7,12 @@ import random
 import datetime
 
 # CUSTOM SEARCH API周りの設定
-CUSTOM_SEARCH_API_KEY = "AIzaSyAlpyIw0CuFYuadn3l7s4W64A607f9V_n8"
-CUSTOM_ENGINE_ID = "015902463065345753840:g8t7587xada"
+CUSTOM_SEARCH_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+CUSTOM_ENGINE_ID = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 URL_TEMPLATE = "https://www.googleapis.com/customsearch/v1?key={key}&cx={cx}&searchType=image&q={search_word}"
 
 # SLACK周りの設定
-SLACK_POST_URL = "https://hooks.slack.com/services/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"
+SLACK_POST_URL = "https://hooks.slack.com/services/T4YNVF84V/B98S3UKQU/XXXXXXXXXXXXXXXXXXXXXXXX"
 
 def post_image_to_slack(search_word):
     """
