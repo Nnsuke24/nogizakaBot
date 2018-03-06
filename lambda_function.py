@@ -7,12 +7,12 @@ import random
 import datetime
 
 # CUSTOM SEARCH API周りの設定
-CUSTOM_SEARCH_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-CUSTOM_ENGINE_ID = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+CUSTOM_SEARCH_API_KEY = "AIzaSyAlpyIw0CuFYuadn3l7s4W64A607f9V_n8"
+CUSTOM_ENGINE_ID = "015902463065345753840:g8t7587xada"
 URL_TEMPLATE = "https://www.googleapis.com/customsearch/v1?key={key}&cx={cx}&searchType=image&q={search_word}"
 
 # SLACK周りの設定
-SLACK_POST_URL = "https://hooks.slack.com/services/T4YNVF84V/B98S3UKQU/XXXXXXXXXXXXXXXXXXXXXXXX"
+SLACK_POST_URL = "https://hooks.slack.com/services/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"
 
 def post_image_to_slack(search_word):
     """
@@ -25,8 +25,14 @@ def post_image_to_slack(search_word):
     if len(urls) == 0:
         return "no images were found."
 
-    # urlをランダムに選択する
-    url = random.choice(urls)
+    # urlをランダムに選択する。（公式画像であればもう一度選択する）
+    while True :
+        url = random.choice(urls)
+        if "img.nogizaka46.com" in url:
+            # もう一度選択する
+            print(url)
+        else:
+            break
 
     # slack用のメッセージを作成
     # 取得した時間によって出すメッセージを変更する
@@ -77,20 +83,25 @@ def build_message(url, *args):
     post_message["text"] = args[0] + url
     return post_message
 
+def get_search_word():
+    """
+    検索ワードを複数候補の中からランダムに選択する
+    """
+    members = []
+    members.append("白石麻衣")
+    members.append("若月佑美")
+    members.append("西野七瀬")
+    members.append("齋藤飛鳥")
+    members.append("秋元真夏")
+    members.append("生田絵梨花")
+    members.append("生駒里奈")
+    members.append("堀未央奈")
+    # members.append("乃木坂46")
+    return random.choice(members)
 
 def lambda_handler(event, context):
     """
     lambdaの実行
-    検索候補を格納し、その中からランダムに検索ワードを選択する
     """
-    members = []
-    members.append("白石麻衣")
-    members.append("西野七瀬")
-    members.append("齋藤飛鳥")
-    members.append("秋元真夏")
-    members.append("堀未央奈")
-    members.append("生駒里奈")
-    members.append("乃木坂46")
-    search_word = random.choice(members)
-    
+    search_word = get_search_word()
     post_image_to_slack(search_word)
